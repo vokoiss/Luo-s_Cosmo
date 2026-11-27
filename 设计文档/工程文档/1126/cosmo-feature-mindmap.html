@@ -1,0 +1,703 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>骆王宇 Cosmo · 预想模块功能思维导图</title>
+  <style>
+    :root {
+      --bg: #f6f4f1;
+      --surface: #ffffff;
+      --ink: #1a1a1a;
+      --muted: #5c5c5c;
+      --line: #e4dfd7;
+      --core: #1d4ed8;
+      --core-bg: #e8eefc;
+      --expand: #6b6b6b;
+      --expand-bg: #f0eeea;
+      --accent: #0f766e;
+      --radius: 10px;
+      --shadow: 0 1px 0 rgba(0,0,0,.04);
+      --font: "Source Han Sans SC", "Noto Sans SC", "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", sans-serif;
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      font-family: var(--font);
+      background:
+        radial-gradient(1200px 600px at 10% -10%, #e7f3f1 0%, transparent 55%),
+        radial-gradient(900px 500px at 100% 0%, #efe8df 0%, transparent 50%),
+        var(--bg);
+      color: var(--ink);
+      line-height: 1.5;
+      min-height: 100vh;
+    }
+    .wrap {
+      max-width: 960px;
+      margin: 0 auto;
+      padding: 28px 20px 64px;
+    }
+    h1 {
+      font-size: 1.65rem;
+      font-weight: 700;
+      letter-spacing: -0.02em;
+      margin: 0 0 8px;
+    }
+    .sub {
+      color: var(--muted);
+      margin: 0 0 20px;
+      font-size: 0.95rem;
+    }
+    .stats {
+      display: flex;
+      gap: 24px;
+      flex-wrap: wrap;
+      margin-bottom: 16px;
+    }
+    .stat strong {
+      display: block;
+      font-size: 1.35rem;
+      font-variant-numeric: tabular-nums;
+    }
+    .stat span {
+      color: var(--muted);
+      font-size: 0.8rem;
+    }
+    .legend {
+      background: #eef6f5;
+      border: 1px solid #cfe3e0;
+      color: #134e4a;
+      border-radius: var(--radius);
+      padding: 12px 14px;
+      font-size: 0.9rem;
+      margin-bottom: 18px;
+    }
+    .tabs {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-bottom: 18px;
+    }
+    .tab {
+      appearance: none;
+      border: 1px solid var(--line);
+      background: var(--surface);
+      color: var(--ink);
+      border-radius: 999px;
+      padding: 8px 14px;
+      font: inherit;
+      font-size: 0.9rem;
+      cursor: pointer;
+      transition: background .15s, border-color .15s, color .15s;
+    }
+    .tab:hover { border-color: #c5beb4; }
+    .tab.active {
+      background: var(--accent);
+      border-color: var(--accent);
+      color: #fff;
+    }
+    .toolbar {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+      margin-bottom: 14px;
+    }
+    .tool {
+      appearance: none;
+      border: 1px solid var(--line);
+      background: transparent;
+      color: var(--muted);
+      border-radius: 8px;
+      padding: 6px 10px;
+      font: inherit;
+      font-size: 0.82rem;
+      cursor: pointer;
+    }
+    .tool:hover { color: var(--ink); border-color: #c5beb4; }
+    .panel {
+      background: var(--surface);
+      border: 1px solid var(--line);
+      border-radius: 14px;
+      box-shadow: var(--shadow);
+      overflow: hidden;
+    }
+    .panel-head {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 16px 18px;
+      border-bottom: 1px solid var(--line);
+    }
+    .dot {
+      width: 12px;
+      height: 12px;
+      border-radius: 3px;
+      flex-shrink: 0;
+    }
+    .panel-head h2 {
+      margin: 0;
+      font-size: 1.1rem;
+      flex: 1;
+    }
+    .count-pill {
+      font-size: 0.75rem;
+      color: var(--muted);
+      background: var(--expand-bg);
+      border-radius: 999px;
+      padding: 3px 8px;
+    }
+    .panel-sum {
+      padding: 0 18px 12px;
+      color: var(--muted);
+      font-size: 0.88rem;
+      margin-top: -4px;
+    }
+    .tree { padding: 8px 10px 14px; }
+    details.branch {
+      border-radius: 10px;
+      margin: 4px 0;
+    }
+    details.branch > summary {
+      list-style: none;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 10px 10px;
+      cursor: pointer;
+      border-radius: 10px;
+      user-select: none;
+    }
+    details.branch > summary::-webkit-details-marker { display: none; }
+    details.branch > summary:hover { background: #faf8f5; }
+    .chev {
+      width: 0;
+      height: 0;
+      border-top: 5px solid transparent;
+      border-bottom: 5px solid transparent;
+      border-left: 7px solid #9a948a;
+      transition: transform .15s;
+      flex-shrink: 0;
+    }
+    details[open] > summary .chev { transform: rotate(90deg); }
+    .branch-title {
+      font-weight: 600;
+      font-size: 0.95rem;
+      flex: 1;
+    }
+    .leaves {
+      padding: 2px 8px 10px 28px;
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+    .leaf {
+      display: flex;
+      align-items: flex-start;
+      gap: 8px;
+      font-size: 0.9rem;
+    }
+    .tag {
+      flex-shrink: 0;
+      font-size: 0.7rem;
+      font-weight: 600;
+      letter-spacing: 0.02em;
+      border-radius: 4px;
+      padding: 2px 6px;
+      line-height: 1.4;
+      margin-top: 1px;
+    }
+    .tag.core { color: var(--core); background: var(--core-bg); }
+    .tag.expand { color: var(--expand); background: var(--expand-bg); }
+    .leaf-label { color: var(--ink); }
+    .leaf-note { color: var(--muted); font-size: 0.82rem; }
+    .overview {
+      margin-top: 28px;
+      padding-top: 8px;
+    }
+    .overview h3 {
+      margin: 0 0 12px;
+      font-size: 1rem;
+    }
+    .map {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+      gap: 10px;
+    }
+    .map-card {
+      background: var(--surface);
+      border: 1px solid var(--line);
+      border-radius: 12px;
+      padding: 12px 14px;
+      cursor: pointer;
+      text-align: left;
+      font: inherit;
+      color: inherit;
+    }
+    .map-card:hover { border-color: #c5beb4; }
+    .map-card strong {
+      display: block;
+      margin-bottom: 6px;
+      font-size: 0.95rem;
+    }
+    .map-card ul {
+      margin: 0;
+      padding-left: 1.1em;
+      color: var(--muted);
+      font-size: 0.8rem;
+    }
+    footer {
+      margin-top: 28px;
+      color: var(--muted);
+      font-size: 0.8rem;
+    }
+    @media (max-width: 560px) {
+      h1 { font-size: 1.35rem; }
+      .wrap { padding: 20px 14px 48px; }
+    }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <h1>骆王宇 Cosmo · 预想模块功能思维导图</h1>
+    <p class="sub">预想模块（尚未实现）。五大模块可切换；「核心」为用户给定，「发散」为产品可落地补充。</p>
+
+    <div class="stats" id="stats"></div>
+    <div class="legend">图例：蓝色「核心」= 用户给定结构；灰色「发散」= 补充能力点。可用下方按钮展开/折叠全部节点。</div>
+
+    <div class="tabs" id="tabs" role="tablist"></div>
+    <div class="toolbar">
+      <button type="button" class="tool" id="expandAll">全部展开</button>
+      <button type="button" class="tool" id="collapseAll">全部折叠</button>
+    </div>
+
+    <div class="panel" id="panel"></div>
+
+    <section class="overview">
+      <h3>总览速览</h3>
+      <div class="map" id="map"></div>
+    </section>
+
+    <footer>仓库路径：设计文档/工程文档/1126 · 预想模块（尚未实现）· 与同目录 md 内容对齐</footer>
+  </div>
+
+  <script>
+    const MODULES = [
+      {
+        id: "home",
+        title: "首页",
+        color: "#2563eb",
+        summary: "推荐流、视频内容、护肤美妆 AR、打卡台",
+        tree: [
+          {
+            title: "推荐",
+            kind: "core",
+            leaves: [
+              { label: "信息流算法", kind: "core", note: "兴趣/互动/时效加权排序" },
+              { label: "个性化", kind: "core", note: "肤质、关注达人、历史浏览冷启动" },
+              { label: "运营位", kind: "core", note: "Banner / 专题卡 / 开屏联动位" },
+              { label: "下拉刷新", kind: "core" },
+              { label: "兴趣标签选择器（首次引导）", kind: "expand" },
+              { label: "负反馈（不感兴趣 / 减少同类）", kind: "expand" },
+              { label: "双列瀑布流 ↔ 单列视频流切换", kind: "expand" },
+              { label: "置顶公告条（活动/系统）", kind: "expand" },
+            ],
+          },
+          {
+            title: "视频",
+            kind: "core",
+            leaves: [
+              { label: "最新一期显示在首页", kind: "core" },
+              { label: "往期入口", kind: "core" },
+              { label: "直播时推送到首页", kind: "core" },
+              { label: "录播", kind: "core" },
+              { label: "开播预约提醒（日历/推送）", kind: "expand" },
+              { label: "弹幕与互动礼物", kind: "expand" },
+              { label: "系列合集 / 节目单", kind: "expand" },
+              { label: "观看进度续播", kind: "expand" },
+              { label: "分享卡片（海报/链接）", kind: "expand" },
+              { label: "清晰度与倍速", kind: "expand" },
+              { label: "章节打点跳转", kind: "expand" },
+              { label: "关联商品挂载条", kind: "expand" },
+            ],
+          },
+          {
+            title: "护肤 / 美妆（+AR）",
+            kind: "core",
+            leaves: [
+              { label: "AR 试妆（唇/眼/底妆）", kind: "expand" },
+              { label: "肤质检测（拍照打分报告）", kind: "expand" },
+              { label: "按检测结果推荐产品", kind: "expand" },
+              { label: "教程视频联动商城 SKU", kind: "expand" },
+              { label: "妆容模板收藏与对比", kind: "expand" },
+              { label: "成分敏感提示", kind: "expand" },
+            ],
+          },
+          {
+            title: "打卡台",
+            kind: "core",
+            leaves: [
+              { label: "日常护肤任务清单", kind: "expand" },
+              { label: "连续打卡天数与补签", kind: "expand" },
+              { label: "完成奖励积分", kind: "expand" },
+              { label: "社区晒图打卡", kind: "expand" },
+              { label: "早/晚护肤分时段提醒", kind: "expand" },
+              { label: "打卡日历热力图", kind: "expand" },
+            ],
+          },
+        ],
+      },
+      {
+        id: "mall",
+        title: "商城",
+        color: "#16a34a",
+        summary: "购物车、橱窗、订单、积分商城及交易闭环",
+        tree: [
+          {
+            title: "购物车",
+            kind: "core",
+            leaves: [
+              { label: "加购 / 数量 / 规格切换", kind: "core" },
+              { label: "失效商品提醒与清理", kind: "expand" },
+              { label: "凑单提示（包邮门槛）", kind: "expand" },
+              { label: "优惠券预估到手价", kind: "expand" },
+            ],
+          },
+          {
+            title: "橱窗",
+            kind: "core",
+            leaves: [
+              { label: "推荐", kind: "core" },
+              { label: "筛选", kind: "core" },
+              { label: "搜索", kind: "core" },
+              { label: "分类导航（护肤/彩妆/工具）", kind: "expand" },
+              { label: "达人带货橱窗", kind: "expand" },
+              { label: "想要清单 / 收藏夹", kind: "expand" },
+              { label: "新品上架角标", kind: "expand" },
+            ],
+          },
+          {
+            title: "订单",
+            kind: "core",
+            leaves: [
+              { label: "下单确认 / 支付", kind: "expand" },
+              { label: "物流轨迹查询", kind: "expand" },
+              { label: "售后（退换货/退款）", kind: "expand" },
+              { label: "评价晒单得积分", kind: "expand" },
+              { label: "发票申请", kind: "expand" },
+            ],
+          },
+          {
+            title: "积分商城",
+            kind: "core",
+            leaves: [
+              { label: "兑换积分", kind: "core" },
+              { label: "兑换商品", kind: "core" },
+              { label: "积分+现金混合支付", kind: "expand" },
+              { label: "兑换记录与过期提醒", kind: "expand" },
+              { label: "限量秒兑场次", kind: "expand" },
+            ],
+          },
+          {
+            title: "营销与履约（横切）",
+            kind: "expand",
+            leaves: [
+              { label: "优惠券中心（领取/核销）", kind: "expand" },
+              { label: "满减 / 套装 / 赠品", kind: "expand" },
+              { label: "支付方式（微信/支付宝等）", kind: "expand" },
+              { label: "地址校验与运费模板", kind: "expand" },
+            ],
+          },
+        ],
+      },
+      {
+        id: "xiaoluo",
+        title: "问小骆",
+        color: "#ea580c",
+        summary: "护肤陪练、问答、人工与音视频咨询",
+        tree: [
+          {
+            title: "护肤陪练",
+            kind: "core",
+            leaves: [
+              { label: "分步骤引导（清洁→精华→防晒）", kind: "expand" },
+              { label: "按肤质定制当日计划", kind: "expand" },
+              { label: "打卡结果回传陪练进度", kind: "expand" },
+            ],
+          },
+          {
+            title: "护肤问答",
+            kind: "core",
+            leaves: [
+              { label: "意图识别 + 知识库回答", kind: "expand" },
+              { label: "成分查询与禁忌搭配", kind: "expand" },
+              { label: "图文/视频混合回复卡片", kind: "expand" },
+            ],
+          },
+          {
+            title: "转人工",
+            kind: "core",
+            leaves: [
+              { label: "排队与预计等待", kind: "expand" },
+              { label: "会话上下文一键交接", kind: "expand" },
+              { label: "专家排班可见时段", kind: "expand" },
+            ],
+          },
+          {
+            title: "视频 / 电话",
+            kind: "core",
+            leaves: [
+              { label: "预约咨询时段", kind: "expand" },
+              { label: "通话内屏幕共享妆容建议", kind: "expand" },
+              { label: "结束后满意度评价", kind: "expand" },
+            ],
+          },
+          {
+            title: "会话与档案（横切）",
+            kind: "expand",
+            leaves: [
+              { label: "会话历史检索", kind: "expand" },
+              { label: "护肤档案（肤质/过敏/在用产品）", kind: "expand" },
+              { label: "知识库版本与引用标注", kind: "expand" },
+              { label: "敏感词与医疗免责声明", kind: "expand" },
+            ],
+          },
+        ],
+      },
+      {
+        id: "community",
+        title: "Community",
+        color: "#7c3aed",
+        summary: "公告、广场、群聊与社区互动治理",
+        tree: [
+          {
+            title: "公告",
+            kind: "core",
+            leaves: [
+              { label: "官方置顶公告", kind: "core" },
+              { label: "活动报名入口", kind: "expand" },
+              { label: "已读回执 / 强提醒弹窗", kind: "expand" },
+            ],
+          },
+          {
+            title: "广场",
+            kind: "core",
+            leaves: [
+              { label: "图文/短视频动态", kind: "expand" },
+              { label: "话题标签聚合", kind: "expand" },
+              { label: "关注流与推荐流", kind: "expand" },
+              { label: "点赞 / 评论 / 转发", kind: "expand" },
+              { label: "活动专题页", kind: "expand" },
+            ],
+          },
+          {
+            title: "群聊",
+            kind: "core",
+            leaves: [
+              { label: "官方粉丝群 / 兴趣群", kind: "expand" },
+              { label: "群公告与置顶消息", kind: "expand" },
+              { label: "禁言 / 踢人 / 举报", kind: "expand" },
+              { label: "@提醒与已读", kind: "expand" },
+              { label: "群内商品/活动卡片", kind: "expand" },
+            ],
+          },
+        ],
+      },
+      {
+        id: "mine",
+        title: "我的",
+        color: "#dc2626",
+        summary: "账号资产、化妆台、设置隐私与 3D 形象",
+        tree: [
+          {
+            title: "个人信息",
+            kind: "core",
+            leaves: [
+              { label: "头像昵称 / 简介 / 生日", kind: "core" },
+              { label: "会员标识与权益入口", kind: "expand" },
+            ],
+          },
+          {
+            title: "化妆台",
+            kind: "core",
+            leaves: [
+              { label: "在用产品清单与余量", kind: "expand" },
+              { label: "开封日期 / 过期提醒", kind: "expand" },
+              { label: "空瓶记录联动复购", kind: "expand" },
+            ],
+          },
+          {
+            title: "积分",
+            kind: "core",
+            leaves: [
+              { label: "积分余额与明细", kind: "core" },
+              { label: "获取任务中心", kind: "expand" },
+              { label: "过期积分预警", kind: "expand" },
+            ],
+          },
+          {
+            title: "等级信息",
+            kind: "core",
+            leaves: [
+              { label: "成长值与等级权益表", kind: "expand" },
+              { label: "升级礼包领取", kind: "expand" },
+            ],
+          },
+          {
+            title: "地址管理",
+            kind: "core",
+            leaves: [
+              { label: "多地址 CRUD / 默认地址", kind: "core" },
+              { label: "智能识别粘贴地址", kind: "expand" },
+            ],
+          },
+          {
+            title: "设置",
+            kind: "core",
+            leaves: [
+              { label: "消息通知开关（推送/短信）", kind: "expand" },
+              { label: "外观皮肤 / 深浅色", kind: "expand" },
+              { label: "缓存清理与版本更新", kind: "expand" },
+              { label: "语言与地区", kind: "expand" },
+            ],
+          },
+          {
+            title: "隐私",
+            kind: "core",
+            leaves: [
+              { label: "权限清单（相机/相册/定位）", kind: "expand" },
+              { label: "个性化推荐开关", kind: "expand" },
+              { label: "账号注销申请", kind: "expand" },
+            ],
+          },
+          {
+            title: "3D 个人形象",
+            kind: "core",
+            leaves: [
+              { label: "捏脸与妆容同步 AR", kind: "expand" },
+              { label: "形象装扮商城联动", kind: "expand" },
+              { label: "分享 3D 形象卡片", kind: "expand" },
+            ],
+          },
+          {
+            title: "账号与资产（横切）",
+            kind: "expand",
+            leaves: [
+              { label: "收藏 / 足迹", kind: "expand" },
+              { label: "账号安全（绑定/改密/设备）", kind: "expand" },
+              { label: "客服与帮助中心", kind: "expand" },
+            ],
+          },
+        ],
+      },
+    ];
+
+    function countKinds() {
+      let core = 0, expand = 0;
+      for (const m of MODULES) {
+        for (const b of m.tree) {
+          if (b.kind === "core") core++; else expand++;
+          for (const leaf of b.leaves || []) {
+            if (leaf.kind === "core") core++; else expand++;
+          }
+        }
+      }
+      return { core, expand };
+    }
+
+    function tagHtml(kind) {
+      const text = kind === "core" ? "核心" : "发散";
+      return `<span class="tag ${kind}">${text}</span>`;
+    }
+
+    function leafHtml(leaf) {
+      const note = leaf.note ? `<span class="leaf-note">— ${escapeHtml(leaf.note)}</span>` : "";
+      return `<div class="leaf">${tagHtml(leaf.kind)}<span class="leaf-label">${escapeHtml(leaf.label)}</span>${note}</div>`;
+    }
+
+    function escapeHtml(s) {
+      return String(s)
+        .replace(/&/g, "&amp;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;")
+        .replace(/"/g, "&quot;");
+    }
+
+    function renderPanel(mod) {
+      const branches = mod.tree.map((b) => {
+        const leaves = (b.leaves || []).map(leafHtml).join("");
+        return `
+          <details class="branch" open>
+            <summary>
+              <span class="chev" aria-hidden="true"></span>
+              <span class="branch-title">${escapeHtml(b.title)}</span>
+              ${tagHtml(b.kind)}
+              <span class="count-pill">${(b.leaves || []).length}</span>
+            </summary>
+            <div class="leaves">${leaves}</div>
+          </details>`;
+      }).join("");
+
+      return `
+        <div class="panel-head">
+          <span class="dot" style="background:${mod.color}"></span>
+          <h2>${escapeHtml(mod.title)}</h2>
+          <span class="count-pill">${mod.tree.length} 支</span>
+        </div>
+        <p class="panel-sum">${escapeHtml(mod.summary)}</p>
+        <div class="tree">${branches}</div>`;
+    }
+
+    let active = "home";
+
+    function setActive(id) {
+      active = id;
+      const mod = MODULES.find((m) => m.id === id) || MODULES[0];
+      document.getElementById("panel").innerHTML = renderPanel(mod);
+      document.querySelectorAll(".tab").forEach((btn) => {
+        btn.classList.toggle("active", btn.dataset.id === id);
+      });
+    }
+
+    function init() {
+      const counts = countKinds();
+      document.getElementById("stats").innerHTML = `
+        <div class="stat"><strong>${counts.core}</strong><span>核心节点</span></div>
+        <div class="stat"><strong>${counts.expand}</strong><span>发散节点</span></div>
+        <div class="stat"><strong>5</strong><span>一级模块</span></div>`;
+
+      const tabs = document.getElementById("tabs");
+      tabs.innerHTML = MODULES.map((m) =>
+        `<button type="button" class="tab" role="tab" data-id="${m.id}">${escapeHtml(m.title)}</button>`
+      ).join("");
+      tabs.addEventListener("click", (e) => {
+        const btn = e.target.closest(".tab");
+        if (btn) setActive(btn.dataset.id);
+      });
+
+      document.getElementById("map").innerHTML = MODULES.map((m) => `
+        <button type="button" class="map-card" data-id="${m.id}">
+          <strong><span class="dot" style="display:inline-block;vertical-align:middle;margin-right:6px;background:${m.color}"></span>${escapeHtml(m.title)}</strong>
+          <ul>${m.tree.map((b) => `<li>${escapeHtml(b.title)}</li>`).join("")}</ul>
+        </button>`).join("");
+      document.getElementById("map").addEventListener("click", (e) => {
+        const card = e.target.closest(".map-card");
+        if (card) {
+          setActive(card.dataset.id);
+          document.getElementById("panel").scrollIntoView({ behavior: "smooth", block: "start" });
+        }
+      });
+
+      document.getElementById("expandAll").addEventListener("click", () => {
+        document.querySelectorAll("#panel details.branch").forEach((d) => { d.open = true; });
+      });
+      document.getElementById("collapseAll").addEventListener("click", () => {
+        document.querySelectorAll("#panel details.branch").forEach((d) => { d.open = false; });
+      });
+
+      setActive(active);
+    }
+
+    init();
+  </script>
+</body>
+</html>
